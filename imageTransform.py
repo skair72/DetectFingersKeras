@@ -1,5 +1,5 @@
 from PIL import Image
-import dirs
+from oldScripts import dirs
 
 
 def rotate(p):
