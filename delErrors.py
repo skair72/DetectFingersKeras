@@ -1,8 +1,8 @@
 import os
 import json
 
-main_dir = 'dina_nikita'
-j = 'new_config.json'
+main_dir = 'unicTrain'
+j = 'unicTrain/config.json'
 
 config = json.load(open(j, 'r+'))
 

@@ -2,8 +2,8 @@ import json
 import os
 from PIL import Image
 
-config = json.load(open('new_config.json'))
-photo_dir = 'newTrain'
+config = json.load(open('unicTrain/config.json'))
+photo_dir = 'unicTrain'
 
 images = list(os.walk(photo_dir))[0][2]
 good_images = g_pic = list(filter(lambda x: not x.startswith('flip') and x.endswith('.jpg'), images))
@@ -23,4 +23,4 @@ for c, img in enumerate(good_images, 1):
     flip(img)
     print(f'{c}/{a}')
 
-json.dump(config, open('new_config.json', 'w+'))
+json.dump(config, open('unicTrain/config.json', 'w+'))
