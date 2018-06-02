@@ -9,14 +9,14 @@ import numpy as np
 from keras.models import load_model
 import pickle
 
-train_folder, new_train_folder = 'dina_nikita', 'newTrain'
+train_folder, new_train_folder = 'maxTrain', 'newTrain'
 json_name = '../new_config.json'
 
 #print("[INFO] loading network...")
 #model = load_model('SecondNewGen_3.model')
 #model2 = load_model('BestNewGen_3.model')
 #mlb = pickle.loads(open('mlb.pickle', "rb").read())
-
+all_fingers = [i for i in range(1, 11)]
 
 def input_fingers(l):
     fingers = input(f'input {l} fingers: ').split(' ')
@@ -80,9 +80,10 @@ def walk(main_dir, to_save):
                 if num == 0:
                     f = []
                 elif num == 10:
-                    f = [i + 1 for i in range(10)]
+                    f = all_fingers
                 elif num > 5:
-                    f = input_fingers(10 - num)
+                    temp = input_fingers(10 - num)
+                    f = list(set(all_fingers)-set(temp))
                 else:
                     f = input_fingers(num)
 

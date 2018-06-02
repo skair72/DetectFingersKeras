@@ -12,8 +12,11 @@ train_datagen = ImageDataGenerator(
         vertical_flip=True,
         fill_mode='nearest')
 
+newGen = ImageDataGenerator(rotation_range=40, width_shift_range=-0.1, height_shift_range=-0.1, shear_range=0.2,
+                            zoom_range=-0.2, fill_mode="nearest", horizontal_flip=True)
 
-img = load_img('train/10/fingers400001.jpg')  # this is a PIL image
+
+img = load_img('../newTrain/fingers12_00232.jpg')  # this is a PIL image
 x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
 x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
 
@@ -25,8 +28,7 @@ folder_name = 'preview'
 if not os.path.isdir(folder_name):
         os.makedirs(folder_name)
 
-for batch in train_datagen.flow(x, batch_size=1,
-                          save_to_dir=folder_name, save_prefix='', save_format='jpg'):
+for batch in newGen.flow(x, batch_size=1,  save_to_dir=folder_name, save_prefix='', save_format='jpg'):
         i += 1
         if i > 10:
                 break

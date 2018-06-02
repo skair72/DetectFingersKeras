@@ -20,4 +20,5 @@ for d in dirs[1:]:
             print(f'{g}: num: {num}, real: {len(config[g])}, {config[g]}')
             config[g] = need
 
+print(config)
 json.dump(config, open(j, 'w+'))
