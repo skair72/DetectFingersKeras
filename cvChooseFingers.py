@@ -13,17 +13,21 @@ train_folder, new_train_folder = 'lab_record', 'newTrain'
 json_name = '../new_config.json'
 
 print("[INFO] loading network...")
-model = load_model('SecondNewGen_3.model')
+model = load_model('newGen_15.model')
 all_fingers = [i for i in range(1, 11)]
 mlb = pickle.loads(open('mlb.pickle', "rb").read())
 
+
 def input_fingers(l):
     fingers = input(f'input {l} fingers: ').split(' ')
-    while len(fingers) != l:
+    while len(fingers) != l and fingers[0] != 'y':
         print(f'wrong! {len(fingers)}')
         fingers = input(f'input {l} fingers: ').split(' ')
         pass
-    return [int(i) for i in fingers]
+    if fingers[0] == 'y':
+        return None
+    else:
+        return [int(i) for i in fingers]
 
 
 def get_config(main_dir, j_name):
@@ -44,7 +48,7 @@ def walk(main_dir, to_save):
         g_pic = sorted(list(filter(lambda x: not x.startswith('.'), d[2])))
         a = len(g_pic)
         for c, g in enumerate(g_pic, 1):
-            print(f'{c}/{a}')
+            print(f'{g}: {c}/{a}')
             if g in config:
                 print(f'{g} in already in config')
                 continue
@@ -52,23 +56,37 @@ def walk(main_dir, to_save):
             else:
                 img = Image.open(os.path.join(d[0], g))
 
-                cv_img = imutils.resize(cv2.imread(os.path.join(d[0], g), 1), height=300)
-
-                cv2.imshow(g, cv_img)
-
+                cv_img = imutils.resize(cv2.imread(os.path.join(d[0], g), 1), height=500)
 
                 # pre-process the image for classification
-                image = cv2.resize(cv_img, (108, 192))
+                image = cv2.resize(cv_img, (192, 108))
                 image = image.astype("float") / 255.0
                 image = img_to_array(image)
                 image = np.expand_dims(image, axis=0)
 
                 proba = model.predict(image)[0]
-                idxs = sorted(np.argsort(proba)[::-1][:num])  # [::-1][:2]
+                idxs = np.argsort(proba)  # [::-1][:2]
                 # loop over the indexes of the high confidence class labels
-                print(' '.join([str(mlb.classes_[i]) for i in idxs]))
-                print(' '.join([f'{proba[i]*100:.0f}' for i in idxs]))
+                predicted = [int(mlb.classes_[i]) for i in sorted(idxs[::-1][:num])]
+                print(str(predicted))
+                print(' '.join([f'{proba[i]*100:.0f}' for i in sorted(idxs[::-1][:num])]))
 
+
+                # mlb.pickle
+
+                # loop over the indexes of the high confidence class labels
+                for (i, j) in enumerate(sorted(idxs), 1):
+                    # build the label and draw the label on the image
+                    label = "{:.0f}".format(proba[j] * 100)
+
+                    cv2.circle(cv_img, ((i * 80), 300 if i == 5 or i == 6 else 50), 15,
+                               (0, 255, 0) if i in predicted else (0, 0, 255), -1)
+
+                    cv2.putText(cv_img, label, ((i * 80 - 15), 300 if i == 5 or i == 6 else 50),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                                (0, 255, 0) if i not in predicted else (0, 0, 255), 2)
+
+                cv2.imshow('choose fingers', cv_img)
                 cv2.waitKey(delay=100)
 
                 if num == 0:
@@ -77,9 +95,16 @@ def walk(main_dir, to_save):
                     f = all_fingers
                 elif num > 5:
                     temp = input_fingers(10 - num)
-                    f = list(set(all_fingers)-set(temp))
+                    if temp is None:
+                        f = predicted
+                    else:
+                        f = list(set(all_fingers)-set(temp))
                 else:
-                    f = input_fingers(num)
+                    temp = input_fingers(num)
+                    if temp is None:
+                        f = predicted
+                    else:
+                        f = temp
 
                 cv2.destroyWindow(g)
                 img.save(os.path.join(to_save, g))

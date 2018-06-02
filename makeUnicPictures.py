@@ -36,4 +36,5 @@ for c, i in enumerate(good_images, 1):
         temp_combinations.clear()
         prefix = current_prefix
 
+all_combinations.update(temp_combinations)
 json.dump(all_combinations, open(json_to_save, 'w+'))
