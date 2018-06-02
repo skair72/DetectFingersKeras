@@ -1,10 +1,7 @@
 import cv2
 import os
-import json
 import imutils
-import pickle
 from PIL import Image
-from keras.models import load_model
 
 
 key_to_num = {
@@ -22,8 +19,8 @@ key_to_num = {
     113: 10
 }
 
-old_folder = 'storage/snap'
-new_folder = 'dina_nikita'
+old_folder = 'storage/snap2'
+new_folder = 'lab_record'
 
 if not os.path.exists(new_folder):
     os.makedirs(new_folder)
@@ -34,7 +31,7 @@ def get_parsed_photos(path):
     dirs = [x for x in os.walk(path)]
     for d in dirs[1:]:
         # num = int(d[0].split('/')[1])
-        g_pic = sorted(list(filter(lambda x: not x.startswith('.') and x.endswith('.jpg'), d[2])))
+        g_pic = sorted(list(filter(lambda x: x.endswith('.jpg'), d[2])))
         for g in g_pic:
             all_images.append(g)
     return all_images
@@ -42,7 +39,7 @@ def get_parsed_photos(path):
 
 def all_images(folder):
     files = list(os.walk(folder))[0][2]
-    good_images = sorted(list(filter(lambda x: not x.startswith('.') and x.endswith('.jpg'), files)))
+    good_images = sorted(list(filter(lambda x: x.endswith('.jpg'), files)))
     a = len(good_images)
     for c, g in enumerate(good_images, 1):
         print(f'{c}/{a} ({g})')

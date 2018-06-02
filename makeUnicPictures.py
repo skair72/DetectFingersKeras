@@ -1,6 +1,7 @@
 import os
 import json
 from shutil import copyfile
+import random
 
 foler_to_parse = 'newTrain'
 foler_to_save = 'unicTrain'
@@ -14,12 +15,14 @@ json_to_save = os.path.join(foler_to_save, 'config.json')
 old_config = json.load(open(json_to_parse, 'r+'))
 
 images = list(os.walk(foler_to_parse))[0][2]
-good_images = sorted(list(filter(lambda x: not x.startswith('flip') and x.endswith('.jpg'), images)))
+good_images = sorted(list(filter(lambda x: not x.startswith('flip') and (x.endswith('.jpg') or x.endswith('.png')), images)))
 prefix = good_images[0][:10]
 all_combinations = dict()
 temp_combinations = dict()
+l = len(good_images)
 
-for i in good_images:
+for c, i in enumerate(good_images, 1):
+    print(f'{c}/{l}')
     current_prefix = i[:10]
     if current_prefix == prefix:
         current_combination = old_config[i]

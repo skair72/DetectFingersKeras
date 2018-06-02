@@ -9,14 +9,13 @@ import numpy as np
 from keras.models import load_model
 import pickle
 
-train_folder, new_train_folder = 'maxTrain', 'newTrain'
+train_folder, new_train_folder = 'lab_record', 'newTrain'
 json_name = '../new_config.json'
 
-#print("[INFO] loading network...")
-#model = load_model('SecondNewGen_3.model')
-#model2 = load_model('BestNewGen_3.model')
-#mlb = pickle.loads(open('mlb.pickle', "rb").read())
+print("[INFO] loading network...")
+model = load_model('SecondNewGen_3.model')
 all_fingers = [i for i in range(1, 11)]
+mlb = pickle.loads(open('mlb.pickle', "rb").read())
 
 def input_fingers(l):
     fingers = input(f'input {l} fingers: ').split(' ')
@@ -57,7 +56,7 @@ def walk(main_dir, to_save):
 
                 cv2.imshow(g, cv_img)
 
-                """
+
                 # pre-process the image for classification
                 image = cv2.resize(cv_img, (108, 192))
                 image = image.astype("float") / 255.0
@@ -70,11 +69,6 @@ def walk(main_dir, to_save):
                 print(' '.join([str(mlb.classes_[i]) for i in idxs]))
                 print(' '.join([f'{proba[i]*100:.0f}' for i in idxs]))
 
-                proba2 = model2.predict(image)[0]
-                idxs2 = sorted(np.argsort(proba2)[::-1][:num])  # [::-1][:2]
-                print(' '.join([str(mlb.classes_[i]) for i in idxs2]))
-                print(' '.join([f'{proba2[i]*100:.0f}' for i in idxs2]))
-                """
                 cv2.waitKey(delay=100)
 
                 if num == 0:
