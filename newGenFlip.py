@@ -19,7 +19,9 @@ def flip(name):
 
 a = len(good_images)
 for c, img in enumerate(good_images, 1):
-    if os.path.exists(os.path.join(photo_dir, 'flip_' + img)):
+    # if os.path.exists(os.path.join(photo_dir, 'flip_' + img)):
+    #    continue
+    if 'flip_' + img in config:
         continue
     flip(img)
     print(f'{c}/{a}')
