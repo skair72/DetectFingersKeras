@@ -29,7 +29,7 @@ config = json.load(open(config_path))
 
 print("[INFO] loading network...")
 img_width, img_height = 192, 108
-model = load_model('newGen_18.model')
+model = load_model('newGen_19.model')
 mlb = pickle.loads(open('mlb.pickle', "rb").read())
 
 key_to_num = {
@@ -121,6 +121,11 @@ while True:
             delete(img_name)
         img_name = next(image_generator)
         continue
+
+    if img_name in err_config:
+        img_name = next(image_generator)
+        continue
+
 
     for i in range(1, 11):
         x, y = ((i * 80), 300 if i == 5 or i == 6 else 50)
