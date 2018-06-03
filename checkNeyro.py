@@ -29,7 +29,7 @@ config = json.load(open(config_path))
 
 print("[INFO] loading network...")
 img_width, img_height = 192, 108
-model = load_model('newGen_17.model')
+model = load_model('newGen_18.model')
 mlb = pickle.loads(open('mlb.pickle', "rb").read())
 
 key_to_num = {
@@ -91,7 +91,10 @@ def both_err(image):
     cp_to_err_folder(image, fingers)
 
 def delete(image):
-    os.remove(os.path.join(out_dir, image))
+    try:
+        os.remove(os.path.join(out_dir, image))
+    except FileNotFoundError:
+        print('\t\tALREADY DELETED')
     del err_config[image]
     json.dump(config, open(config_path, 'w+'))
 
@@ -101,21 +104,20 @@ img_name = next(image_generator)
 local_checked = list()
 right_count = 0
 while True:
-    while img_name in err_config or img_name in checked:
+    while img_name in checked:
         img_name = next(image_generator)
 
     img = imutils.resize(cv2.imread(os.path.join(photo_dir, img_name), 1), height=img_height*5, width=img_width*5)
 
     if img_name not in local_checked:
         local_checked.append(img_name)
-        print('calculating...')
+        print(f'right: {right_count}\tcalculating...')
         config_fingers = sorted(config[img_name])
         neyro_fingers = sorted(predict(img, 0.6))
 
     if config_fingers == neyro_fingers:
         if img_name in err_config:
             right_count += 1
-            print(f'{img_name} right, all {right_count}')
             delete(img_name)
         img_name = next(image_generator)
         continue
