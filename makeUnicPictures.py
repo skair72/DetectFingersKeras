@@ -18,6 +18,7 @@ images = list(os.walk(foler_to_parse))[0][2]
 good_images = sorted(list(filter(lambda x: not x.startswith('flip') and (x.endswith('.jpg') or x.endswith('.png')), images)))
 prefix = good_images[0][:10]
 all_combinations = dict()
+prefix_good_images = dict()
 temp_combinations = dict()
 l = len(good_images)
 
