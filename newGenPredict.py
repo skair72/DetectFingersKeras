@@ -14,7 +14,7 @@ img_width, img_height = 192, 108
 # load the trained convolutional neural network and the multi-label
 # binarizer
 print("[INFO] loading network...")
-model = load_model('newGen_14.model')
+model = load_model('newGen_16.model')
 mlb = pickle.loads(open('mlb.pickle', "rb").read())
 
 # vcap = cv2.VideoCapture("rtsp://192.168.1.7:5303/h264_ulaw.sdp")
